@@ -1,0 +1,35 @@
+(function(){
+  'use strict';
+
+  electionChartsApp.controller('PartyCtrl', ['$scope', '$routeParams', 'partyResource', function ($scope, $routeParams, partyResource) {
+    var partyId = $routeParams.partyId;
+    $scope.party = partyResource.get(partyId);
+    $scope.results = partyResource.get(partyId, 'result');
+    var detailed_results_undeclared = partyResource.query(partyId, 'detailed_result_undeclared');
+      var detailed_results_declared = partyResource.query(partyId, 'detailed_result_declared');
+      var detailed_results = {"declared":[],"undeclared":[]};
+    $scope.statewise_results = partyResource.query(partyId, 'statewise_result');
+      $scope.show = "all";
+      var one_done = false;
+
+      detailed_results_declared.$promise.then(function(detailed_results_declared){
+          detailed_results.declared = detailed_results_declared;
+          $scope.detailed_results_declared = detailed_results_declared;
+          if(one_done){
+              $scope.detailed_results = detailed_results;
+          }
+          one_done= true;
+
+      });
+
+      detailed_results_undeclared.$promise.then(function(detailed_results_undeclared){
+          detailed_results.undeclared = detailed_results_undeclared;
+          $scope.detailed_results_undeclared = detailed_results_undeclared;
+
+          if(one_done){
+              $scope.detailed_results = detailed_results;
+          }
+          one_done=true;
+      });
+  }]);
+}());

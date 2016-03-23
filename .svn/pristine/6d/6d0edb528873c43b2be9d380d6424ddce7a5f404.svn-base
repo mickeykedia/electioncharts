@@ -1,0 +1,7 @@
+var electionChartsApp;
+
+(function(){
+  'use strict';
+  electionChartsApp = electionChartsApp || angular.module('electionChartsApp', ['ngRoute', 'ngResource', 'ui.bootstrap', 'googlechart', 'ngGrid']);
+}());
+

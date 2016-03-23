@@ -1,0 +1,18 @@
+<div class="container" ng-controller="StateListCtrl">
+  <h3>State List</h3>
+  <table class='table table-hover'>
+    <tr>
+      <th class="col-md-2">Name</th>
+      <th class="col-md-1">State Code</th>
+      <th class="col-md-1">Short Form</th>
+      <th class="col-md-1"></th>
+    </tr>
+    
+    <tr ng-repeat="state in stateList">
+      <td>{{state.name}}</td>
+      <td>{{state.state_code}}</td>
+      <td>{{state.shortform}}</td>
+      <td><a ng-href="/state/{{state.id}}" class="btn btn-sm btn-primary">Preview</a></td>
+    </tr>
+  </table>
+</div>

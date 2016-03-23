@@ -1,0 +1,23 @@
+(function(){
+  'use strict';
+
+  electionChartsApp.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
+    $routeProvider
+    .when('/', {
+      templateUrl: '/static/views/index.html'
+    })
+    .when('/party', {
+      templateUrl: '/static/views/party-list.html',
+      controller: 'PartyListCtrl'
+    })
+    .when('/party/:partyId', {
+      templateUrl: '/static/views/party.html',
+      controller: 'PartyCtrl'
+    })
+    .otherwise({
+      redirectTo: '/'
+    });
+
+    $locationProvider.html5Mode(true);
+  }]);
+}());

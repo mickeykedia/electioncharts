@@ -1,0 +1,14 @@
+(function(){
+  'use strict';
+
+  electionChartsApp.controller('PartyStateCtrl', ['$scope', '$routeParams', 'partyStateResource','partyResource','stateResource', function ($scope, $routeParams,partyStateResource, partyResource,stateResource) {
+
+    var partyId = $routeParams.partyId;
+      var stateId = $routeParams.stateId;
+    $scope.party = partyResource.get(partyId);
+      $scope.state = stateResource.get(stateId);
+    $scope.results = partyStateResource.get(partyId,stateId, 'result');
+    $scope.detailed_results_undeclared = partyStateResource.query(partyId,stateId, 'detailed_result_undeclared');
+      $scope.detailed_results_declared = partyStateResource.query(partyId,stateId, 'detailed_result_declared');
+  }]);
+}());

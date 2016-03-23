@@ -1,0 +1,9 @@
+(function(){
+  'use strict';
+
+  electionChartsApp.controller('CandidateCtrl', ['$scope', '$routeParams', 'candidateResource', function ($scope, $routeParams, candidateResource) {
+    var candidateId = $routeParams.candidateId;
+    $scope.candidate = candidateResource.get(candidateId);
+    $scope.results = candidateResource.query(candidateId, 'result');
+  }]);
+}());

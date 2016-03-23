@@ -1,0 +1,40 @@
+
+<div class="container" ng-controller="CandidateCtrl" id="chartdiv">
+	
+  <div class="well">
+    <div class="row">
+      <div class="col-md-6">Candidate Name: {{candidate.name|titlecase}}</div>
+      <div class="col-md-6">Candidate ID: {{candidate.id}}</div>
+    </div>
+  </div>
+  <ol class="breadcrumb">
+        <li><a href="../">Home</a></li>
+        <li><a href="../candidate">Candidates</a></li>
+        <li class="active">{{candidate.name|titlecase	}}</li>
+    </ol>
+  <table class="table table-hover">
+    <tr>
+      <th class="col-md-2">Constituency Name</th>
+      <th class="col-md-1">Candidate Vote Share</th>
+      <th class="col-md-3">Leading Candidate Name</th>
+      <th class="col-md-1">Leading Candidate Party</th>
+      <th class="col-md-1">Counting Status</th>
+      <th class="col-md-1">Leader's vote share</th>
+    </tr>
+    
+    <tr ng-repeat="result in results">
+      <td><a ng-href="/constituency/{{result.constituency_id}}"> {{result.constituency_name}}</a></td>
+      <td>{{result.candidate_votes*100/(result.candidate_votes+result.other_votes)|number:1}}%
+      	<div google-chart data="result.vote_share_details" type="PieChart" title="Vote share" width=300></div>
+      </td>
+      <td><a ng-href="/candidate/{{result.leader_id}}">{{result.leader_name|titlecase}}</a></td>
+      <td><a ng-href="/party/{{result.leader_party_id}}">{{result.leader_party_name|titlecase}}</a></td>
+      <td>{{result.counting_status}}</td>
+      <td>{{result.leader_count*100/(result.candidate_votes+result.other_votes)|number:1}}%</td>
+    </tr> 
+  </table>
+</div>
+
+
+        
+

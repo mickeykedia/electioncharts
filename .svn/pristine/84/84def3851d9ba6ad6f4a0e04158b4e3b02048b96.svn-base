@@ -1,0 +1,35 @@
+<div class="container" ng-controller="PartyCtrl">
+  <div class="well">
+    <div class="row">
+      <div class="col-md-6">Party Name: {{party.name}}</div>
+      <div class="col-md-6">Party ID: {{party.id}}</div>
+    </div>
+  </div>
+  <table class="table table-hover">
+    <tr>
+      <th class="col-md-1">Constituency ID</th>
+      <th class="col-md-1">Constituency Name</th>
+      <th class="col-md-1">Candidate ID</th>
+      <th class="col-md-2">Candidate Name</th>
+      <th class="col-md-1">Competing Candidate ID</th>
+      <th class="col-md-2">Competing Candidate Name</th>
+      <th class="col-md-1">Competing Party</th>
+      <th class="col-md-1">Status</th>
+      <th class="col-md-1">Lead</th>
+      <th class="col-md-1">Competing Votes</th>
+    </tr>
+    
+    <tr ng-repeat="result in results">
+      <td>{{result.constituency_id}}</td>
+      <td>{{result.constituency_name}}</td>
+      <td>{{result.candidate_id}}</td>
+      <td>{{result.candidate_name}}</td>
+      <td>{{result.competing_candidate_id}}</td>
+      <td>{{result.competing_candidate_name}}</td>
+      <td>{{result.competing_party}}</td>
+      <td>{{result.status}}</td>
+      <td>{{result.lead}}</td>
+      <td>{{result.competing_votes}}</td>
+    </tr> 
+  </table>
+</div>

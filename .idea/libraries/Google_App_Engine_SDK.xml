@@ -1,0 +1,8 @@
+<component name="libraryTable">
+  <library name="Google App Engine SDK" type="python">
+    <CLASSES>
+      <root url="file:///Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine" />
+    </CLASSES>
+    <SOURCES />
+  </library>
+</component>

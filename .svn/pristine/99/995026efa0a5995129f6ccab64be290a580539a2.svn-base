@@ -1,0 +1,42 @@
+(function(){
+    'use strict';
+
+    electionChartsApp.controller('CoalitionStateCtrl', ['$scope', '$routeParams', 'coalitionStateResource','coalitionResource','stateResource', function ($scope, $routeParams, coalitionStateResource,coalitionResource,stateResource) {
+        var coalitionId = $routeParams.coalitionId;
+        var stateId = $routeParams.stateId;
+
+        $scope.coalition = coalitionResource.get(coalitionId);
+        $scope.state = stateResource.get(stateId);
+        var parties = coalitionStateResource.query(coalitionId, stateId,'result');
+        $scope.detailed_results_undeclared = coalitionStateResource.query(coalitionId, stateId,'detailed_result_undeclared');
+        $scope.detailed_results_declared = coalitionStateResource.query(coalitionId,stateId, 'detailed_result_declared');
+        var results = {};
+
+        parties.$promise.then(function(parties){
+
+            results.wins = 0;
+            results.leads = 0;
+            results.swing = 0;
+            results.vote_percentage=0
+            for(var p in parties){
+                if(parties[p].wins){
+                    results.wins = results.wins+ parties[p].wins;
+                }
+                if(parties[p].leads){
+                    results.leads = results.leads+ parties[p].leads;
+                }
+                if(parties[p].swing){
+                    results.swing = results.swing+ parties[p].swing;
+                }
+                if(parties[p].vote_percentage){
+                    results.vote_percentage = results.vote_percentage +parseFloat(parties[p].vote_percentage);
+                }
+//                results.vote_percentage = results.vote_percentage+ p.vote_percentage;
+            }
+            results.vote_percentage = Number(results.vote_percentage.toFixed(2));
+        });
+
+        $scope.results = results;
+        $scope.parties = parties;
+    }]);
+}());

@@ -1,0 +1,9 @@
+(function(){
+  'use strict';
+
+  electionChartsApp.controller('ConstituencyCtrl', ['$scope', '$routeParams', 'constituencyResource', function ($scope, $routeParams, constituencyResource) {
+    var constituencyId = $routeParams.constituencyId;
+    $scope.constituency = constituencyResource.get(constituencyId);
+    $scope.results = constituencyResource.query(constituencyId, 'result');
+  }]);
+}());

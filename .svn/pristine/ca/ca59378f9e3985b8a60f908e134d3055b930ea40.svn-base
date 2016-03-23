@@ -1,0 +1,29 @@
+
+<div class="container" ng-controller="CandidateCtrl">
+  <div class="well">
+    <div class="row">
+      <div class="col-md-6">Candidate Name: {{candidate.name}}</div>
+      <div class="col-md-6">Candidate ID: {{candidate.id}}</div>
+    </div>
+  </div>
+  <table class="table table-hover">
+    <tr>
+      <th class="col-md-2">Constituency Name</th>
+      <th class="col-md-1">Candidate Vote Share</th>
+      <th class="col-md-3">Leading Candidate Name</th>
+      <th class="col-md-1">Leading Candidate Party</th>
+      <th class="col-md-1">Counting Status</th>
+      <th class="col-md-1">Leader's vote share</th>
+    </tr>
+    
+    <tr ng-repeat="result in results">
+      <td><a ng-href="/constituency/{{result.constituency_id}}"> {{result.constituency_name}}</a></td>
+      <td>{{result.candidate_vote_share}}%</td>
+      <td><a ng-href="/candidate/{{result.leader_id}}">{{result.leader_name}}</a></td>
+      <td><a ng-href="/party/{{result.leader_party_id}}">{{result.leader_party_name}}</a></td>
+      <td>{{result.counting_status}}</td>
+      <td>{{result.leader_vote_share}}%</td>
+    </tr> 
+  </table>
+</div>
+

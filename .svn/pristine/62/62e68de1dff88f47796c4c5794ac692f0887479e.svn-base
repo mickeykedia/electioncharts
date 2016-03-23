@@ -1,0 +1,100 @@
+<div >
+    <h3>Election Charts</h3>
+    <ul class="nav nav-tabs">
+        <li ><a ng-href="/">Home</a></li>
+        <li class="dropdown ">
+            <a dropdown-toggle data-toggle="dropdown" >
+                Parties <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+                <li><a ng-href="/party/1"> BJP</a></li>
+                <li><a ng-href="/party/2"> Congress </a></li>
+                <li><a ng-href="/party/371"> AAP </a></li>
+                <li><a ng-href="/party/248"> AIADMK </a></li>
+                <li><a ng-href="/party/3"> BSP </a></li>
+                <li><a ng-href="/party/247"> DMK </a></li>
+                <li><a ng-href="/party/34"> JD(U) </a></li>
+                <li><a ng-href="/party/49"> NCP </a></li>
+                <li><a ng-href="/party/16"> SP </a></li>
+                <li><a ng-href="/party"> All Parties </a></li>
+            </ul>
+        </li>
+        <li class="dropdown">
+            <a dropdown-toggle data-toggle="dropdown" >
+                Coalitions <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a ng-href="/coalition/2"> BJP +</a></li>
+                <li><a ng-href="/coalition/1"> Congress +</a></li>
+            </ul>
+        </li>
+        <li ><a ng-href="/state">States</a></li>
+        <li class="active"><a ng-href="/constituency">Constituencies</a></li>
+        <li><a ng-href="/candidate">Candidates</a></li>
+    </ul>
+    <ol class="breadcrumb breadcrumb-peer">
+        <li><a ng-href="/constituency">Constituencies</a></li>
+        <li class="active">{{constituency.name}}</li>
+    </ol>
+    <div class="page-header">
+        <h1 class="header_title">{{constituency.name}} <small>({{ constituency.voting_status}})</small></h1>
+  </div>
+     <div class="row">
+    
+    <div class="col-md-6">
+      <div google-chart chart="chartVotes" style="{{chartVotes.cssStyle}}" on-ready="chartReady()"></div>
+    </div>
+  </div>
+  <table class="table table-hover">
+    <tr>
+      <th class="col-md-3">Candidate Name</th>
+      <th class="col-md-3"></th>
+      <th class="col-md-3">Party</th>      
+      <th class="col-md-1">Votes</th>
+      <th class="col-md-1">Vote share</th>
+    </tr>
+    
+    <tr ng-repeat="result in constituency.result_list">
+      <td><a ng-href="/candidate/{{result.candidate_id}}">{{result.candidate_name}}</a></td>
+      <td>
+      		<img ng-if="result.party_symbol !=NULL" src="/static/images/{{ result.party_symbol }}" class="header_party_image"/>
+        	
+       </td>
+      <td><a ng-href="/party/{{result.party_id}}">{{result.party_name}}</a></td>
+      <td>{{result.votes|number}}</td>
+      <td>{{result.votes*100/constituency.total_votes|number:1}}%</td>
+    </tr> 
+  </table>
+  
+  <accordion close-others="oneAtATime">
+    <accordion-group is-open="isopen" >
+        <accordion-heading ng-click="isopen=!isopen">
+           <div>
+            Result in 2009 (Expand)
+           <i class="pull-right glyphicon" 
+              ng-class="{'glyphicon-   chevron-down': isopen, 'glyphicon-chevron-right': !isopen}">
+           </i>
+           </div>
+       </accordion-heading>
+  
+  
+		  <table class="table table-hover">
+		    <tr>
+		      <th class="col-md-3">Candidate Name</th>
+		      <th class="col-md-3">Party</th>
+		      <th class="col-md-1">Votes</th>
+		      <th class="col-md-1">Vote share</th>
+		    </tr>
+		    
+		    <tr ng-repeat="result2 in results2009">
+		      <td><a ng-href="/candidate/{{result2.candidate_id}}">{{result2.candidate_name}}</a></td>
+		      <td><a ng-href="/party/{{result2.party_id}}">{{result2.party_name}}</a></td>
+		      <td>{{result2.votes|number}}</td>
+		      <td>{{result2.votes*100/result2.total_votes|number:1}}%</td>
+		    </tr> 
+		  </table>
+  
+     </accordion-group>
+</accordion>
+  
+</div>

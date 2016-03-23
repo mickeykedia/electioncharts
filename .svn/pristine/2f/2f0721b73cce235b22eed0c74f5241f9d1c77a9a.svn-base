@@ -1,0 +1,92 @@
+<div class="container" ng-controller="PartyCtrl">
+
+
+  <div class="page-header">
+      <img ng-if="party.symbol !=NULL" src="/static/images/{{ party.symbol }}" class="header_party_image"/>
+      <img ng-if="party.symbol ==NULL" src="/static/images/party_all.jpg" class="header_party_image"/>
+      <h1 class="header_title">{{party.name}}<small> (Part of {{ party.coalition }})</small></h1>
+
+  </div>
+    <ol class="breadcrumb">
+        <li><a ng-href="/">Home</a></li>
+        <li><a ng-href="/party">Parties</a></li>
+        <li class="active">{{party.name}}</li>
+    </ol>
+        <div class="row placeholders">
+            <div class="col-xs-6 col-sm-3 placeholder">
+                <div class="circle">{{ results.wins }}</div>
+                <h4>Wins</h4>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+                <div class="circle">{{ results.leads }}</div>
+                <h4>Leads</h4>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+                <div class="circle">{{ results.swing }}</div>
+              <h4>Swing</h4>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+                <div class="circle">{{ results.vote_percentage }}</div>
+              <h4>Vote %</h4>
+            </div>
+          </div>
+
+    </div>
+    <div d3-party-bar data= "detailed_results" party="party" results="results"></div>
+    <h2 class="sub-header">State Wise Results</h2>
+    <div class="input-group">
+        <span class="input-group-addon">Search</span>
+        <input type="text" class="form-control" data-ng-model="state" placeholder="State Name">
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped ">
+
+            <thead>
+            <tr>
+                <th>State</th>
+                <th>Total</th>
+                <th>(Wins/Leads)</th>
+                <th>Swing</th>
+                <th>Vote %</th>
+                <th>Total seats</th>
+            </tr>
+            </thead>
+            <tr data-ng-repeat="res in statewise_results | filter:state | orderBy:'total_ahead':reverse=true">
+                <td><a ng-href="/party/state/{{ party.id }}/{{ res.state_id }}">{{ res.state }}</a></td>
+                <td>{{ res.wins+res.leads }}</td>
+                <td>({{ res.wins }}/{{ res.leads }})</td>
+                <td>{{ res.swing }}</td>
+                <td>{{ res.vote_percentage }}</td>
+                <td>{{ res.total }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="input-group">
+        <span class="input-group-addon">Search</span>
+        <input type="text" class="form-control" data-ng-model="candidate" placeholder="Candidate Name,Constituency Name">
+    </div>
+    <div class="table-responsive">
+      <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Constituency Name</th>
+              <th>Candidate Name</th>
+              <th>Status</th>
+              <th>Votes</th>
+              <th>Lead/Trail By</th>
+            </tr>
+          </thead>
+
+        <tr ng-repeat="result in detailed_results | filter:candidate">
+          <td><a ng-href="/constituency/{{result.constituency_id}}"> {{result.constituency_name}}</a></td>
+          <td><a ng-href="/candidate/{{result.candidate_id}}">{{result.candidate_name}}</a></td>
+          <td>{{result.status}}</td>
+            <td>{{result.votes}}</td>
+          <td>{{result.lead}}</td>
+        </tr>
+  </table>
+</div>
+
+<script src="/static/js/docs.min.js"></script>
+

@@ -1,0 +1,6 @@
+<div class="container">
+  <h1>Election Charts</h2>
+  <p>
+  <a ng-href="/party" class="btn btn-sm btn-primary">Party List</a>
+  </p>
+</div>

@@ -1,0 +1,56 @@
+<div >
+    <h3>Election Charts</h3>
+    <ul class="nav nav-tabs">
+        <li ><a ng-href="/">Home</a></li>
+        <li class="dropdown active">
+            <a dropdown-toggle data-toggle="dropdown" >
+                Parties <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+                <li><a ng-href="/party/1"> BJP</a></li>
+                <li><a ng-href="/party/2"> Congress </a></li>
+                <li><a ng-href="/party/371"> AAP </a></li>
+                <li><a ng-href="/party/248"> AIADMK </a></li>
+                <li><a ng-href="/party/3"> BSP </a></li>
+                <li><a ng-href="/party/247"> DMK </a></li>
+                <li><a ng-href="/party/34"> JD(U) </a></li>
+                <li><a ng-href="/party/49"> NCP </a></li>
+                <li><a ng-href="/party/16"> SP </a></li>
+                <li><a ng-href="/party/223"> SAD </a></li>
+                <li><a ng-href="/party/4"> TDP </a></li>
+                <li><a ng-href="/party"> All Parties </a></li>
+            </ul>
+        </li>
+        <li class="dropdown">
+            <a dropdown-toggle data-toggle="dropdown" >
+                Coalitions <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a ng-href="/coalition/2"> BJP +</a></li>
+                <li><a ng-href="/coalition/1"> Congress +</a></li>
+            </ul>
+        </li>
+        <li><a ng-href="/state">States</a></li>
+        <li><a ng-href="/constituency">Constituencies</a></li>
+        <li><a ng-href="/aboutus">About Us</a></li>
+    </ul
+    <ol class="breadcrumb breadcrumb-peer">
+        <li class="active">Lok Sabha 2014, Live Results </li>
+    </ol>
+    <div class="page-header">
+        <h1 class="header-title">Party List</h1>
+    </div>
+    <div class="input-group">
+        <span class="input-group-addon">Search</span>
+        <input type="text" class="form-control" data-ng-model="party" placeholder="Party Name">
+    </div>
+  <table class='table table-hover'>
+    <tr>
+      <th class="col-md-2">Name</th>
+    </tr>
+    
+    <tr ng-repeat="res in partyList | filter:party">
+      <td ng-if="res.id != 6"><a ng-href="/party/{{res.id}}" >{{ res.name }}</a></td>
+    </tr>
+  </table>
+</div>

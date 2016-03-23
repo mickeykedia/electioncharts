@@ -1,0 +1,16 @@
+<div class="container" ng-controller="PartyListCtrl">
+  <h3>Party List</h3>
+  <table class='table table-hover'>
+    <tr>
+      <th class="col-md-2">ID</th>
+      <th class="col-md-2">Name</th>
+      <th class="col-md-1"></th>
+    </tr>
+    
+    <tr ng-repeat="party in partyList">
+      <td><a class="label label-info" ng-href="/party/{{party.id}}">{{party.id}}</a></td>
+      <td>{{party.name}}</td>
+      <td><a ng-href="/party/{{party.id}}" class="btn btn-sm btn-primary">Preview</a></td>
+    </tr>
+  </table>
+</div>

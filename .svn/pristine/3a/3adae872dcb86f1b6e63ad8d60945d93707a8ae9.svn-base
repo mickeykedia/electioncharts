@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="http://dimplejs.org/dist/dimple.v1.1.5.min.js"></script>
+ 
+    
+   <table style="border: 1px solid black">
+<tbody>
+<tr>
+<th width="35%" style="background-color: #CCFFCC; margin: 5px">State</th>
+<th style="background-color: #CCFFCC; margin: 5px">Alias</th>
+<th style="background-color: #CCFFCC; margin: 5px">Code</th>
+</tr>
+{% for state in statelist %}
+
+<tr>
+<td>{{ state['name']}}</td>
+<td>{{ state['shortform']}}</td>
+<td>{{ state['state_code']}}</td>
+</tr>
+
+{% endfor %}
+
+</tbody>
+</table>
+
+ 
+{% endblock %}

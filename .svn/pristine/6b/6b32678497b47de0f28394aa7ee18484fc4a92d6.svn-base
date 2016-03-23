@@ -1,0 +1,14 @@
+<div class="container" ng-controller="CandidateListCtrl">
+  <h3>Candidate List</h3>
+  <table class='table table-hover'>
+    <tr>
+      <th class="col-md-2">Name</th>
+      <th class="col-md-1"></th>
+    </tr>
+    
+    <tr ng-repeat="candidate in candidateList">
+      <td>{{candidate.name}}</td>
+      <td><a ng-href="/candidate/{{candidate.id}}" class="btn btn-sm btn-primary">Preview</a></td>
+    </tr>
+  </table>
+</div>

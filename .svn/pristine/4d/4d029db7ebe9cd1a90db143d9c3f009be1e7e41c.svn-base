@@ -1,0 +1,15 @@
+<div class="container">
+  <h1>Election Charts</h2>
+  <p>
+  <a ng-href="/state" class="btn btn-sm btn-primary">State List</a>
+  </p>
+  <p>
+  <a ng-href="/constituency" class="btn btn-sm btn-primary">Constituency List</a>
+  </p>
+  <p>
+  <a ng-href="/party" class="btn btn-sm btn-primary">Party List</a>
+  </p>
+  <p>
+  <a ng-href="/candidate" class="btn btn-sm btn-primary">Candidate List</a>
+  </p>
+</div>

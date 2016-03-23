@@ -1,0 +1,9 @@
+(function(){
+  'use strict';
+
+  electionChartsApp.controller('StateCtrl', ['$scope', '$routeParams', 'stateResource', function ($scope, $routeParams, stateResource) {
+    var stateId = $routeParams.stateId;
+    $scope.state = stateResource.get(stateId);
+    $scope.results = stateResource.query(stateId, 'result');
+  }]);
+}());

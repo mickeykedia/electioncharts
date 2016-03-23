@@ -1,0 +1,24 @@
+<div class="container" ng-controller="CandidateListCtrl">
+  <h3>Candidate List</h3>
+  <ol class="breadcrumb">
+        <li><a href="../">Home</a></li>
+        <li class="active">Candidate List</li>
+    </ol>
+  <div class="input-group">
+        <span class="input-group-addon">Search</span>
+        <input type="text" class="form-control" data-ng-model="filtertext" placeholder="Filter by Candidate/Constituency/Party">
+    </div>
+  <table class='table table-hover'>
+    <tr>
+      <th class="col-md-2">Candidate</th>
+      <th class="col-md-2">Constituency</th>
+      <th class="col-md-2">Party</th>
+    </tr>
+    
+    <tr ng-repeat="candidate in candidateList| filter:filtertext">
+      <td><a ng-href="/candidate/{{candidate.candidate_id}}">{{candidate.candidate_name | titlecase}}</a></td>
+      <td><a ng-href="/constituency/{{candidate.constituency_id}}">{{candidate.constituency_name | titlecase}}</a></td>
+      <td><a ng-href="/party/{{candidate.party_id}}">{{candidate.party_name|titlecase}}</a></td>
+    </tr>
+  </table>
+</div>

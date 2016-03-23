@@ -1,0 +1,317 @@
+(function(){
+  'use strict';
+electionChartsApp.directive('d3PartyBar',['$window','$timeout','$compile','d3Service',function($window,$timeout,$compile,d3Service){
+
+        return {
+            restrict:'EA',
+            scope:{
+                data:'=',
+                show:'=',
+                party:'=',
+                results:'='
+            },
+            link:function(scope,element,attrs){
+                d3Service.d3().then(function(d3){
+                    var renderTimeout;
+
+                    var margin = {top:10,right:10,bottom:10,left:50};
+
+                    var svg = d3.select(element[0])
+                        .append("svg");
+
+                    scope.$watch('data',function(newVals,oldVals){
+                        scope.render(newVals,scope.party,scope.results,scope.show);
+                        $compile(element.contents())(scope);
+                    },true);
+                    scope.$watch('results',function(newVals,oldVals){
+                        scope.render(scope.data,scope.party,newVals);
+                        $compile(element.contents())(scope);
+                    },true);
+                    scope.$watch('show',function(newVals,oldVals){
+                        scope.render(scope.data,scope.party,scope.results,newVals);
+                        $compile(element.contents())(scope);
+                    },true);
+
+                    /*
+                     watch for show , include it in function below
+                     */
+                    var colorAlter = function ColorLuminance(hex, lum) {
+
+                        // validate hex string
+                        hex = String(hex).replace(/[^0-9a-f]/gi, '');
+                        if (hex.length < 6) {
+                            hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+                        }
+                        lum = lum || 0;
+
+                        // convert to decimal and change luminosity
+                        var rgb = "#", c, i;
+                        for (i = 0; i < 3; i++) {
+                            c = parseInt(hex.substr(i*2,2), 16);
+                            c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+                            rgb += ("00"+c).substr(c.length);
+                        }
+
+                        return rgb;
+                    }
+
+
+                    scope.render = function(data,party,results,show){
+                        svg.selectAll('*').remove();
+
+
+                        if(!data) return;
+                        if(!show || show=="undeclared"){
+                            if(data.undeclared.length < 3) {
+                                return ;
+                            }else {
+                                data = data.undeclared;
+                            }
+                        }else if(show=="declared"){
+                            if(data.declared.length < 3) {
+                                return ;
+                            }else {
+                                data = data.declared;
+                            }
+                        }else if(show=="all"){
+
+                            data = data.declared.concat(data.undeclared);
+                            if(data.length < 3) {
+                                return ;
+                            }
+                        }
+                        console.log(show);
+
+                        var height = 400 - margin.top - margin.bottom,
+                            width = d3.select(element[0]).node().offsetWidth - margin.left - margin.right,
+                            yScale = d3.scale.pow().exponent(0.5)
+                                .domain(d3.extent(data,function(d){
+                                        return d.lead;
+                                }))
+                                .range([height,0]),
+                            xScale= d3.scale.ordinal()
+                                .domain(data.map(function(d){
+                                    return d.candidate_name;
+                                })).rangeRoundBands([0,width],0.10,0),
+                            bannerHeight=height/8;
+
+
+                        var colourWin= "#7A0000",
+                            colour = "#006600",
+                            colourTrail="#7D7D7E";
+
+
+                        var min = d3.min(data,function(d){
+                            return d.lead;
+                        })
+
+
+                        /**
+                         * find the first candidate with a lead, first candidate with a trail and the first candidate.
+                         * Figure out the x axis position of those three points and draw lines and write text
+                         * on the SVG. Text must count the number of wins/leads and trails as well.
+                         * Add (lead %)
+                         */
+
+
+                        svg.attr('height',height + margin.top + margin.bottom)
+                            .attr('width',width + margin.left + margin.right)
+                            .attr("border",1);
+
+
+                        var svgG = svg.append("g")
+                            .attr("transform","translate("+margin.left+","+margin.top+")");
+
+                        var yAxis = d3.svg.axis()
+                            .scale(yScale)
+                            .orient("left");
+
+                        svgG.selectAll('.bar')
+                            .data(data)
+                            .enter()
+                            .append('rect')
+                            .attr("class",function(d){
+                                return "bar";
+                            })
+                            .attr('width',xScale.rangeBand())
+                            .attr('y',function(d){
+                                return yScale(Math.max(0, d.lead));
+                            })
+                            .attr('x',function(d){
+                                return xScale(d.candidate_name);
+                            })
+                            .attr('fill',function(d){
+                                if(d.status=="TRAIL"){
+                                    /**
+                                     * grey
+                                     */
+                                    return colourTrail;
+                                }else if (d.status=="WIN"){
+                                    return colourWin;
+                                }else {
+                                    return colour;
+                                }
+                            })
+                            .attr('title',function(d){
+                                if(d.status=="WIN"){
+                                    return d.constituency_name+" (WIN)";
+                                }else if(d.status=="LEAD"){
+                                    return d.constituency_name+" (LEAD)";
+                                }else {
+                                    return d.constituency_name+" (TRAIL)";
+                                }
+                            })
+                            .attr('my-popover',function(d){
+                                var str = "Candidate : "+ d.candidate_name+"<br/>";
+                                /**
+                                 * Put commas in the numbers,
+                                 * difficult to read them or else.
+                                 * @type {string}
+                                 */
+                                str = str+"Total Votes : "+ d.votes+"<br/>";
+                                if(d.status=="TRAIL"){
+                                    str = str+"Trail by: "+(-d.lead).toString()+"<br/>";
+                                }else if (d.status=="LEAD"){
+                                    str = str+"Lead by : "+ d.lead.toString()+"<br/>";
+                                }else {
+                                    str=str+"Winning Margin : "+ d.lead.toString();
+                                }
+                                return str;
+                            })
+                            .attr('popover-append-to-body',true)
+                            .attr('leads',function(d){
+                                return d.lead;
+                            })
+                            .transition()
+                            .duration(1000)
+                            .attr('height', function (d) {
+                                return Math.abs(yScale(d.lead) - yScale(0));
+                            });
+                        var trails = 0,
+                            firstLeadCandidate,
+                            firstTrailCandidate,
+                            firstWinCandidate,
+                            winBeginning,
+                            leadBeginning,
+                            trailBeginning;
+
+                        /**
+                         * either the data will map declared constituencies
+                         * or undeclared ones. So wins/leads will not co-exist in one graph.
+                         * Need to handle that somehow.
+                         */
+                        if(results.wins>0){
+                            firstWinCandidate = data[0].candidate_name;
+                            winBeginning = xScale(firstWinCandidate);
+                            console.log(firstWinCandidate);
+                        }
+                        if(results.leads>0){
+                            firstLeadCandidate = data[results.wins].candidate_name;
+                            leadBeginning = xScale(firstLeadCandidate);
+                            console.log(firstLeadCandidate);
+                        }
+                        if(data.length > (results.wins + results.leads)){
+                            firstTrailCandidate = data[results.leads+results.wins].candidate_name;
+                            trailBeginning = xScale(firstTrailCandidate);
+                        }
+
+                        /**
+                         * handle line drawing differently for those which don't
+                         * have lead candidates/trail candidates
+                         */
+                        /**
+                         * draw win line
+                         */
+
+                        if(firstWinCandidate!=null){
+                            var endPointX,stroke;
+
+                            if(firstLeadCandidate!=null){
+                                endPointX = leadBeginning;
+                                /**
+                                 * if the lead candidate is not zero then the win line
+                                 * will not be dotted.
+                                 */
+                                stroke = 1;
+                            }else {
+                                endPointX = trailBeginning;
+                                stroke = 0;
+                            }
+                            var winLine = svgG.append("line")
+                                .attr("x1",endPointX)
+                                .attr("x2",endPointX)
+                                .attr("y1",0)
+                                .attr("y2",height)
+                                .attr("stroke","black");
+                            if(stroke==0){
+                                winLine.attr("stroke-dasharray","5,5");
+                            }
+
+                        }
+
+
+                        if(firstLeadCandidate!=null){
+                            var beginptX = xScale(firstLeadCandidate);
+                            var endptX = xScale(firstTrailCandidate);
+
+                            /**
+                             * add conditionality on distance between beginpt and end point.
+                             *
+                            svg.append("line")
+                                .attr("x1",beginptX)
+                                .attr("y1",height-(yScale(0)/4))
+                                .attr("x2",endptX)
+                                .attr("y2",height-(yScale(0)/4))
+                                .attr("stroke","black");
+
+                            var textLocationX = (beginptX+endptX)/2;
+
+
+                            svg.append("text")
+                                .attr("x",textLocationX)
+                                .attr("y",height-(yScale(0)/3))
+                                .text("Leads");
+                             */
+
+                            svgG.append("line")
+                                .attr("x1",endptX)
+                                .attr("y1",0)
+                                .attr("x2",endptX)
+                                .attr("y2",height)
+                                .attr("stroke","black")
+                                .attr("stroke-dasharray","5,5");
+
+                        }
+
+
+                        /**
+                         * adding axes.
+                         */
+
+                        svgG.append("g")
+                            .attr("class","y axis")
+                            .call(yAxis)
+                            .append("line")
+                            .attr("y",100)
+                            .attr("x",100)
+                            .attr("dy",".71em")
+                            .style("text-anchor","end")
+                            .text("Margin");
+
+                        svgG.append("g")
+                            .attr("class","x axis")
+                            .append("line")
+                            .attr("y1",yScale(0))
+                            .attr("y2",yScale(0))
+                            .attr("x2",width);
+
+                    }
+
+                });
+
+            }
+
+        };
+
+    }]);
+}());

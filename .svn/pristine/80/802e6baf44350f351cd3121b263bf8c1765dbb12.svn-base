@@ -1,0 +1,69 @@
+
+<div id="chartdiv">
+
+    <h3>Election Charts</h3>
+    <ul class="nav nav-tabs">
+        <li ><a ng-href="/">Home</a></li>
+        <li class="dropdown ">
+            <a dropdown-toggle data-toggle="dropdown" >
+                Parties <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+                <li><a ng-href="/party/1"> BJP</a></li>
+                <li><a ng-href="/party/2"> Congress </a></li>
+                <li><a ng-href="/party/371"> AAP </a></li>
+                <li><a ng-href="/party/248"> AIADMK </a></li>
+                <li><a ng-href="/party/3"> BSP </a></li>
+                <li><a ng-href="/party/247"> DMK </a></li>
+                <li><a ng-href="/party/34"> JD(U) </a></li>
+                <li><a ng-href="/party/49"> NCP </a></li>
+                <li><a ng-href="/party/16"> SP </a></li>
+                <li><a ng-href="/party"> All Parties </a></li>
+            </ul>
+        </li>
+        <li class="dropdown">
+            <a dropdown-toggle data-toggle="dropdown" >
+                Coalitions <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a ng-href="/coalition/2"> BJP +</a></li>
+                <li><a ng-href="/coalition/1"> Congress +</a></li>
+            </ul>
+        </li>
+        <li ><a ng-href="/state">States</a></li>
+        <li class="active"><a ng-href="/constituency">Constituencies</a></li>
+        <li><a ng-href="/candidate">Candidates</a></li>
+    </ul>
+    <ol class="breadcrumb">
+        <li><a ng-href="/candidate">Candidates</a></li>
+        <li class="active">{{candidate.name|titlecase}}</li>
+    </ol>
+    <div class="page-header">
+        <h1 class="header-title">{{candidate.name|titlecase}}</h1>
+    </div>
+  <table class="table table-hover">
+    <tr>
+      <th class="col-md-2">Constituency Name</th>
+      <th class="col-md-1">Candidate Vote Share</th>
+      <th class="col-md-3">Leading Candidate Name</th>
+      <th class="col-md-1">Leading Candidate Party</th>
+      <th class="col-md-1">Counting Status</th>
+      <th class="col-md-1">Leader's vote share</th>
+    </tr>
+    
+    <tr ng-repeat="result in results">
+      <td><a ng-href="/constituency/{{result.constituency_id}}"> {{result.constituency_name}}</a></td>
+      <td>{{result.candidate_votes*100/(result.candidate_votes+result.other_votes)|number:1}}%
+      	<div google-chart data="result.vote_share_details" type="PieChart" title="Vote share" width=300></div>
+      </td>
+      <td><a ng-href="/candidate/{{result.leader_id}}">{{result.leader_name|titlecase}}</a></td>
+      <td><a ng-href="/party/{{result.leader_party_id}}">{{result.leader_party_name|titlecase}}</a></td>
+      <td>{{result.counting_status}}</td>
+      <td>{{result.leader_count*100/(result.candidate_votes+result.other_votes)|number:1}}%</td>
+    </tr> 
+  </table>
+</div>
+
+
+        
+

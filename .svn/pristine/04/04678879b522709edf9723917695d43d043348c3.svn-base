@@ -1,0 +1,11 @@
+(function(){
+  'use strict';
+
+  electionChartsApp.controller('PartyCtrl', ['$scope', '$routeParams', 'partyResource', function ($scope, $routeParams, partyResource) {
+    var partyId = $routeParams.partyId;
+    $scope.party = partyResource.get(partyId);
+    $scope.results = partyResource.get(partyId, 'result');
+    $scope.detailed_results = partyResource.query(partyId, 'detailed_result');
+    $scope.statewise_results = partyResource.query(partyId, 'statewise_result');
+  }]);
+}());
