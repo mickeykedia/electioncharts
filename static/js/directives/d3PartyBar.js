@@ -19,19 +19,26 @@ electionChartsApp.directive('d3PartyBar',['$window','$timeout','$compile','d3Ser
 
                     var svg = d3.select(element[0])
                         .append("svg");
-
+                        
+                    // selects the not enough data banner 
                     var notEnoughData = d3.select(element[0]).select("#ned");
-
+                    
+                    // selects the loading banner
                     var loading = d3.select("#loading");
+
 
                     var numberFormat =  function (x) {
                         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                     };
+                    
+                    
                     scope.$watch('data',function(newVals,oldVals){
+                        // calls scope.render with the this data ! 
                         scope.render(newVals,scope.party,scope.results,scope.show);
                         $compile(element.contents())(scope);
                     },true);
                     scope.$watch('results',function(newVals,oldVals){
+                        // calls scope.render - I'm assuming 'results' is a controller which passes to this or something
                         scope.render(scope.data,scope.party,newVals);
                         $compile(element.contents())(scope);
                     },true);
@@ -68,7 +75,8 @@ electionChartsApp.directive('d3PartyBar',['$window','$timeout','$compile','d3Ser
                         loading.style("display","none");
                         svg.attr("height","0");
                     }
-
+                    
+                    // function about what to do when loading data
                     var loadingDataNow = function(){
                         /**
                          * Actually loading data - so dismiss the alerts now.
