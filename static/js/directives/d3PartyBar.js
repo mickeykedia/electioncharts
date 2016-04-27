@@ -16,7 +16,7 @@ electionChartsApp.directive('d3PartyBar',['$window','$timeout','$compile','d3Ser
 
                     var margin = {top:40,right:10,bottom:10,left:50};
 
-
+                    
                     var svg = d3.select(element[0])
                         .append("svg");
                         
@@ -85,8 +85,10 @@ electionChartsApp.directive('d3PartyBar',['$window','$timeout','$compile','d3Ser
                         loading.style("display","none");
                     }
 
-
+                    // Finally we have data and now and we are going to do something with it ! 
                     scope.render = function(data,party,results,show){
+                      
+                        // Remove svg elements
                         svg.selectAll('*').remove();
 
 
@@ -103,15 +105,20 @@ electionChartsApp.directive('d3PartyBar',['$window','$timeout','$compile','d3Ser
                          */
                         if(!show || show=="all"){
 
+                            // Concatenating declared with undeclared 
                             data = data.declared.concat(data.undeclared);
                             if(data.length < 3) {
                                 notEnoughDataFunction();
                                 return ;
                             }
+                            // Sorting data by lead 
                             data.sort(function(a,b){
                                 return b.lead - a.lead;
                             });
+                            // Adding the total number of constituencies which 
+                            // in which the party is leading/winning 
                             i =results.wins + results.leads;
+                            // last index of total data length
                             j =data.length-i;
                         }else if(show=="declared"){
                             if(data.declared.length < 3) {
@@ -135,26 +142,29 @@ electionChartsApp.directive('d3PartyBar',['$window','$timeout','$compile','d3Ser
                         }
                         loadingDataNow();
 
-
+                        
                         var height = 400 - margin.top - margin.bottom,
+                            // Finding the width of the first element and using that as the default width for responsiveness
                             width = d3.select(element[0]).node().offsetWidth - margin.left - margin.right,
+                            // square root scale for the leads
                             yScale = d3.scale.pow().exponent(0.5)
                                 .domain(d3.extent(data,function(d){
                                         return d.lead;
                                 }))
                                 .range([height,0]).clamp(true),
+                            // ordinal scale for individual constituencies 
                             xScale= d3.scale.ordinal()
                                 .domain(data.map(function(d){
                                     return d.constituency_id+":"+d.candidate_name;
                                 })).rangeBands([0,width],0.15,0.05);
 
-
+                        // defining colours to use for each bar
                         var  colour_swing = "#006600",
                             colour ="#4D944D",
                             colourTrail="#7D7D7E",
                             colourTrail_swing="#000000";
-
-
+    
+                        // minimum lead (prolly a large negative number )
                         var min = d3.min(data,function(d){
                             return d.lead;
                         })
@@ -172,7 +182,7 @@ electionChartsApp.directive('d3PartyBar',['$window','$timeout','$compile','d3Ser
                             .attr('width',width + margin.left + margin.right)
                             .attr("border",1);
 
-
+                        // Adding a 'g' element to the SVG 
                         var svgG = svg.append("g")
                             .attr("transform","translate("+margin.left+","+margin.top+")");
 
@@ -267,6 +277,7 @@ electionChartsApp.directive('d3PartyBar',['$window','$timeout','$compile','d3Ser
                          * also a text which says - constituency in the right place on the graph.
                          */
                         if (i>0 & i < data.length){
+                            // i represents the number of winning/lead seats and that's why the line is drawn there (?)
                             var trailLineX = xScale(data[i].constituency_id+":"+ data[i].candidate_name);
                             svgG.append("line")
                                 .attr("x1",trailLineX)
@@ -325,3 +336,31 @@ electionChartsApp.directive('d3PartyBar',['$window','$timeout','$compile','d3Ser
 
     }]);
 }());
+
+/**
+ * 
+ * 
+ * 
+
+Expected data definition for the d3js code 
+
+data: is an array of elements containing the following fields
+  lead: Positive/Negative number of votes
+  status: ‘TRAIL’, ‘LOST’, ‘LEAD’, ‘WIN’
+  party_id: Current party id
+  last_time_party_id: Party id of the party which won last time
+  constituency_id: 
+  candidate_name:
+  constituency_name:
+  votes: Total votes cast in this constituency
+  winning_party_name: Name of the winning party 
+  loosing_party_name:  Runner up if you’re winning 
+results 
+  wins: Number of wins
+  leads: Number of leads
+party: Mysterious object that doesn't seem to get used here 
+show: "declared", "undeclared"
+ * 
+ * 
+ * 
+ * /
