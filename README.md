@@ -4,6 +4,7 @@ This is a repo for an interactive web interface for showing election data live. 
 
 The facebook page showing screenshots etc from the original app is at [https://www.facebook.com/electioncharts](https://www.facebook.com/electioncharts). 
 
+A live demo of the **Bird Swing Graph** can be found at [here](http://bl.ocks.org/mickeykedia/4d247c4741cdbccef3a527f5201275f4)
 
 # Basic structure
 
